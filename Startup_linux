@@ -1,0 +1,19 @@
+#!/bin/bash
+# bash script to startup PicoLog TC-08 python logging software in Linux
+# Has not been tested yet.
+
+# activate local conda environment
+conda_path = "$PWD\.conda"
+conda activate "$conda_path"
+echo "Local conda environment activated: $conda_path"
+echo
+
+# run the main script
+py_path = ".\main.py"
+echo ">>> Starting app: $py_path ..."
+echo 
+python $py_path
+echo
+echo "`n<<< End of the script: $py_path"
+echo
+read -p "Press Enter to continue..."
