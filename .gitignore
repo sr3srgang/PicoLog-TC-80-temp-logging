@@ -17,3 +17,6 @@ build/
 venv/
 
 .bak/
+
+# logs
+logs/
