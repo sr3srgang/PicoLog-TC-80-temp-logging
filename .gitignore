@@ -1,3 +1,6 @@
+# local conda env folder
+.conda/
+
 # .gitignore file for picosdk-python-wrappers repository
 # Untracked files/folders to ignore.
 

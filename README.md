@@ -1,5 +1,6 @@
 # PicoLog TC-08 temperature logging Python software for Sr3 use
-last modified: 2023/10/10
+- Created by Joonseok Hur
+- 2023/10/10: last modified by Joonseok Hur
 
 ## Functions
 Periodically read temps and upload it to Sr group's Grafana's DB
