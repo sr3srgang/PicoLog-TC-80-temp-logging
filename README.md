@@ -66,7 +66,7 @@ Periodically read temps and upload it to Sr group's Grafana's DB
     - If Raspberry Pi 3B+ is used, do not use any Conda distributions and instead do everything in `venv` with system's `python`.
     - The 64-bit ARM architecture (aach64) for Raspberry Pi 4B is not supported by Pico Technology (as of 2023/10/22; see https://www.picotech.com/support/viewtopic.php?t=42162)
 6. Try running `picotest.py` script by pressing `F5` key to check if picosdk successfully read the temperature from the logger.
-7. Run `python -m pip install influxdb-client` (or `conda install influxdb-client` for Miniforge).
+7. Run `mamba install influxdb-client` in miniforge (or `python -m pip install influxdb-client` for other conda).
 8. Open `main.py` and setup `assingment` dict variable to assign `Location` (description of where the temp is being measured) and `Channel` (TC-08 logger's channel #) of temp measurements. Set measurement period to `period` variable with the unit of second. 
 9. Try running `main.py` script by pressing `F5` key to check if the app runs as it should.
 10. Check if a relevant way to start up the app in the next section works.
