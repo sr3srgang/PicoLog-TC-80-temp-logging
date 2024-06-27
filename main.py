@@ -12,7 +12,9 @@ from time import sleep
 from datetime import datetime
 import traceback
 
-### >>>>> User parameters >>>>>
+import os
+
+# >>>>> User parameters >>>>>
 # Measurement period
 period = 15  # in second
 
@@ -51,10 +53,10 @@ assignments = [
         "Channel": 8,
     },
 ]
-### <<<<< User parameters <<<<<
+# <<<<< User parameters <<<<<
 
 
-### should not need to touch the below
+# should not need to touch the below
 
 # yemonitor database credentials
 url = "http://yemonitor.colorado.edu:8086"
@@ -89,7 +91,8 @@ def main():
         chandle = status["open_unit"]
 
         # set mains rejection to 60 Hz
-        status["set_mains"] = tc08.usb_tc08_set_mains(chandle, 1)  # 0: 50 Hz, 1: 60 Hz
+        status["set_mains"] = tc08.usb_tc08_set_mains(
+            chandle, 1)  # 0: 50 Hz, 1: 60 Hz
         assert_pico2000_ok(status["set_mains"])
 
         # set up channel
@@ -98,7 +101,8 @@ def main():
         # B=66 , E=69 , J=74 , K=75 , N=78 , R=82 , S=83 , T=84 , ' '=32 , X=88
         typeK = ctypes.c_int8(75)
         for channel in channels:
-            status["set_channel"] = tc08.usb_tc08_set_channel(chandle, channel, typeK)
+            status["set_channel"] = tc08.usb_tc08_set_channel(
+                chandle, channel, typeK)
             assert_pico2000_ok(status["set_channel"])
 
         # get minimum sampling interval in ms
@@ -109,8 +113,12 @@ def main():
 
         temp = (ctypes.c_float * 9)()
         overflow = ctypes.c_int16(0)
-        
+
         # raise Exception() # error test
+
+        # create log folder if not exist
+        if not os.path.exists(dirname_log):
+            os.makedirs(dirname_log)
 
         # repeat measuring temps and upload to DB server
         while True:
@@ -135,7 +143,7 @@ def main():
                 with open(dirname_log + fname_log_meas, "a") as f:
                     f.write(measstr + "\n")
 
-                ## upload results to yemonitor DB
+                # upload results to yemonitor DB
                 # format your data to write to the database server
                 records = [
                     {
@@ -150,14 +158,14 @@ def main():
                 with InfluxDBClient(url=url, token=token, org=org) as client:
                     with client.write_api(write_options=SYNCHRONOUS) as writer:
                         writer.write(bucket=bucket, record=records)
-                    
+
             except Exception as ex:
                 datetimestr = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
                 measstr = f"{datetimestr}: Error occured during a measurement. See \"{dirname_log + fname_log_err}\"."
                 print(measstr)
                 with open(dirname_log + fname_log_meas, "a") as f:
                     f.write(measstr + "\n")
-                
+
                 exstr = f"{datetimestr}: Error occured during a measurement.\n"
                 exstr += "".join(traceback.format_exception(ex))
                 with open(dirname_log + fname_log_err, "a") as f:
@@ -171,8 +179,10 @@ def main():
         exstr = f"{datetimestr}: Error occured out of the measurement loop.\n"
         exstr += "".join(traceback.format_exception(ex))
         print(exstr)
+
+        # append error message to log file
         with open(dirname_log + fname_log_err, "a") as f:
-                f.write(exstr + "\n\n")
+            f.write(exstr + "\n\n")
 
     finally:
         # close unit
@@ -182,8 +192,8 @@ def main():
         # display status returns
         # print(status)
         # print(temp)
-        
-        print ("Connection to TC-08 Logger closed. Terminating...")
+
+        print("Connection to TC-08 Logger closed. Terminating...")
 
 
 if __name__ == "__main__":
