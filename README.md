@@ -1,6 +1,6 @@
 # PicoLog TC-08 temperature logging Python software for Sr3 use
 - Created by Joonseok Hur
-- 2024/06/23: last modified by Joonseok Hur
+- 2024/09/11: last modified by Joonseok Hur
 
 ## Functions
 Periodically read temps and upload it to Sr group's Grafana's DB
@@ -79,16 +79,47 @@ Run (doubleclick) `.\Startup_windows.lnk` shortcut file. If the `.lnk` file is m
 Tested for Windows 11.
 
 ### Linux
-Run `.\Startup_windows.lnk` in `./Startup_linux` file.
-Has not been tested yet.
+Go to *Activity* dashboard and click *TC08logger* icon that is to be made by the following procedure:
+
+1. Copy and rename `./Startup_ubuntu`, `./Startup_ubuntu.desktop`, and `./icon.png` files to an appropriate location. Renaming to `./Startup_ubuntu_TC08logger`, `Startup_ubuntu_TC08logger.desktop`, and `icon_Startup_ubuntu_TC08logger.png`, respectively, at Home folder (i.e., `$HOME` or `/home/[[username]]`) is recommended.
+2. Open the (renamed) copy of `Startup_ubuntu` script file and update the placeholders
+    - `DIR_TC08LOGGER="##type here the path to the project folder; see README.md##"`
+3. Open the (renamed) copy of `.desktop` file in a text editer and update the placeholders 
+    - `Exec=##type here the path to the (renamed) copy of Startup_ubuntu script file; see README.md##`
+    - `Icon=##type here to the path to the icon file; see README.md##`
+4. Run `sudo desktop-file-install [[path to the renamed copy of .desktop file]]` (e.g., `sudo desktop-file-install ~/Startup_ubuntu_TC08logger.desktop`) and see if the icon shows up in *Activity* (the dashboard that pops up when clicking the left bottom Ubuntu icon).
+5. Click and see if a terminal pops up with title *TC08logger* and start recording temperatures.
+6. In case the `.desktop` file has to be updated & re-installed, remove the installed `.desktop` file in `/etc/share/applications/` folder as a super user by running the below command line. Then, open *Activity* dashboard, and see if the ion has disappeared or disappear in a few seconds. After the ion is removed, install the edited `.desktop` again, following Steps 4 and 5.
+```bash
+    sudo rm /etc/share/applications/Startup_ubuntu_TC08logger.desktop
+```
+
+
+Tested for Ubuntu 24.04.
 
 ## Autostart setting at OS startup
 ### Windows
 Modify the `.\Startup_windows.lnk` following [this section](#windows).
 Copy the `.lnk` file to `%USERPROFILE%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup`.
 
+Tested for Windows 11.
+
 ### Linux
-cf. setting up autosart through GUI in Ubuntu: https://help.ubuntu.com/stable/ubuntu-help/startup-applications.html.en
+Using *Startup Applications Properties* GUI application.
+Refer to https://help.ubuntu.com/stable/ubuntu-help/startup-applications.html.en.
+
+
+1. Open gnome-session-properties GUI by one of the following ways:
+    - Open *Activity* dashboard and search for *Startup Applications Properties*
+    - Press Alt+F2 and run `gnome-session-properties`
+2. Click *Add* button and populate the blanks as follows:
+    - Name: TC08logger
+    - Command: ##type the absolute path to the (renamed) copy of `Startup_ubuntu` script file## (e.g.,/home/korra/Startup_ubuntu_TC08logger)
+    - Comment: Pico Logger TC-08 read & upload to Grafana's Influx DB
+    ![image](ubuntu-startup-application-setting.png)
+3. Click *Save* button.
+
+Tested for Ubuntu 24.04.
 
 ## Use
 It will start reading temps, print in stdout, and uploading to Grafana's DB periodically. 
