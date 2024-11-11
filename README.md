@@ -81,15 +81,20 @@ Tested for Windows 11.
 ### Linux
 Go to *Activity* dashboard and click *TC08logger* icon that is to be made by the following procedure:
 
-1. Copy and rename `./Startup_ubuntu`, `./Startup_ubuntu.desktop`, and `./icon.png` files to an appropriate location. Renaming to `./Startup_ubuntu_TC08logger`, `Startup_ubuntu_TC08logger.desktop`, and `icon_Startup_ubuntu_TC08logger.png`, respectively, at Home folder (i.e., `$HOME` or `/home/[[username]]`) is recommended.
-2. Open the (renamed) copy of `Startup_ubuntu` script file and update the placeholders
+1. Grant excecutable permission to `./Startup_bash` and `./Startup_ubuntu` files by running the below line in a terminal.
+```bash
+    cd <root folder path>
+    chmod +x ./Startup_bash ./Startup_ubuntu
+```
+2. Copy and rename `./Startup_ubuntu`, `./Startup_ubuntu.desktop`, and `./icon.png` files to an appropriate location. Renaming to `./Startup_ubuntu_TC08logger`, `Startup_ubuntu_TC08logger.desktop`, and `icon_Startup_ubuntu_TC08logger.png`, respectively, at Home folder (i.e., `$HOME` or `/home/[[username]]`) is recommended.
+3. Open the (renamed) copy of `Startup_ubuntu` script file and update the placeholders
     - `DIR_TC08LOGGER="##type here the path to the project folder; see README.md##"`
-3. Open the (renamed) copy of `.desktop` file in a text editer and update the placeholders 
+4. Open the (renamed) copy of `.desktop` file in a text editer and update the placeholders 
     - `Exec=##type here the path to the (renamed) copy of Startup_ubuntu script file; see README.md##`
     - `Icon=##type here to the path to the icon file; see README.md##`
-4. Run `sudo desktop-file-install [[path to the renamed copy of .desktop file]]` (e.g., `sudo desktop-file-install ~/Startup_ubuntu_TC08logger.desktop`) and see if the icon shows up in *Activity* (the dashboard that pops up when clicking the left bottom Ubuntu icon).
-5. Click and see if a terminal pops up with title *TC08logger* and start recording temperatures.
-6. In case the `.desktop` file has to be updated & re-installed, remove the installed `.desktop` file in `/etc/share/applications/` folder as a super user by running the below command line. Then, open *Activity* dashboard, and see if the ion has disappeared or disappear in a few seconds. After the ion is removed, install the edited `.desktop` again, following Steps 4 and 5.
+5. Run `sudo desktop-file-install [[path to the renamed copy of .desktop file]]` (e.g., `sudo desktop-file-install ~/Startup_ubuntu_TC08logger.desktop`) and see if the icon shows up in *Activity* (the dashboard that pops up when clicking the left bottom Ubuntu icon).
+6. Click and see if a terminal pops up with title *TC08logger* and start recording temperatures.
+7. In case the `.desktop` file has to be updated & re-installed, remove the installed `.desktop` file in `/etc/share/applications/` folder as a super user by running the below command line. Then, open *Activity* dashboard, and see if the ion has disappeared or disappear in a few seconds. After the ion is removed, install the edited `.desktop` again, following Steps 4 and 5.
 ```bash
     sudo rm /etc/share/applications/Startup_ubuntu_TC08logger.desktop
 ```
