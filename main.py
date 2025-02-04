@@ -81,14 +81,21 @@ fname_log_err = "error.log"  # log for errors
 
 def main():
     # Create chandle and status ready for use
-    chandle = ctypes.c_int16()
-    status = {}
 
+    status = {}  # dict to store status of device oprations; see the usages below
     try:
         # open unit
+        print(f"Connecting to a TC-08 logger...")
         status["open_unit"] = tc08.usb_tc08_open_unit()
         assert_pico2000_ok(status["open_unit"])
-        chandle = status["open_unit"]
+        chandle = ctypes.c_int16(status["open_unit"])
+
+        if status["open_unit"] != 1:  # 1 means USBTC08_OK in the Pico status codes
+            raise Exception(
+                f"Error: Could not open device. Error code: {status['open_unit']}\n\tcf. status=0: no (more) available device to connect.")
+
+        print(f"Connected.")
+        print()
 
         # set mains rejection to 60 Hz
         status["set_mains"] = tc08.usb_tc08_set_mains(
