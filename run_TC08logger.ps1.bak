@@ -4,7 +4,8 @@
 # out of this folder or it will not work. Create a shortcut for this shortcut for out-of-place use.
 
 # set console title
-$host.ui.RawUI.WindowTitle = "TC08logger"
+$host.ui.RawUI.WindowTitle = "##Type here the desired title of the consol; see README.md##"
+#e.g., $host.ui.RawUI.WindowTitle = "TC08logger"
 
 # activate local conda environment
 $conda_path = "$PWD\.conda"

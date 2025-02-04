@@ -20,4 +20,5 @@ else
 fi"
 
 # run the commands in a new terminal
-gnome-terminal --title="TC08logger" -- bash -i -c "$STR_CMD"
+gnome-terminal --title="##Type here the desired title of the terminal##" -- bash -i -c "$STR_CMD"
+#e.g., gnome-terminal --title="TC08logger" -- bash -i -c "$STR_CMD"

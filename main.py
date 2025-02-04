@@ -13,8 +13,12 @@ from datetime import datetime
 import traceback
 
 import os
+from pathlib import Path
 
 # >>>>> User parameters >>>>>
+# TC-08 Serial number
+SN = "AC161/246"
+
 # Measurement period
 period = 15  # in second
 
@@ -62,12 +66,7 @@ assignments = [
 url = "http://yemonitor.colorado.edu:8086"
 token = "yelabtoken"
 org = "yelab"
-
-# bucket, measurement, tag, field in InfluxDB
 bucket = "sr3"  # If bucket not exists, create it from the database UI.
-measurement = "TC08logger"
-tag = "Location"
-field = "Temp[degC]"
 
 channels = [
     assignment["Channel"] for assignment in assignments
@@ -75,14 +74,17 @@ channels = [
 
 # Names of log files
 dirname_log = "./logs/"  # folder to save log files
+Path(dirname_log).mkdir(exist_ok=True)
+
 fname_log_meas = "temp.log"  # log for measure temperatures
 fname_log_err = "error.log"  # log for errors
 
 
 def main():
     # Create chandle and status ready for use
-
+    chandle = ctypes.c_int16()
     status = {}  # dict to store status of device oprations; see the usages below
+
     try:
         # open unit
         print(f"Connecting to a TC-08 logger...")
@@ -152,11 +154,15 @@ def main():
 
                 # upload results to yemonitor DB
                 # format your data to write to the database server
+
                 records = [
                     {
-                        "measurement": measurement,
-                        "tags": {tag: assignment["Location"]},
-                        "fields": {field: temp[assignment["Channel"]]},
+                        "measurement": "TC08logger",
+                        "tags": {
+                            "Logger SN": SN,
+                            "Location": assignment["Location"],
+                        },
+                        "fields": {"Temp[degC]": temp[assignment["Channel"]]},
                     }
                     for assignment in assignments
                 ]
