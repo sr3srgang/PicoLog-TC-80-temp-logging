@@ -155,17 +155,28 @@ def main():
                 # upload results to yemonitor DB
                 # format your data to write to the database server
 
-                records = [
-                    {
-                        "measurement": "TC08logger",
-                        "tags": {
-                            "Logger SN": SN,
-                            "Location": assignment["Location"],
-                        },
-                        "fields": {"Temp[degC]": temp[assignment["Channel"]]},
-                    }
-                    for assignment in assignments
-                ]
+                records = \
+                    [  # cold junction
+                        {
+                            "measurement": "TC08logger",
+                            "tags": {
+                                "Logger SN": SN,
+                                "Location": "Cold Junction",
+                            },
+                            "fields": {"Temp[degC]": temp[0]},
+                        }
+                    ] + \
+                    [  # channel temperatures
+                        {
+                            "measurement": "TC08logger",
+                            "tags": {
+                                "Logger SN": SN,
+                                "Location": assignment["Location"],
+                            },
+                            "fields": {"Temp[degC]": temp[assignment["Channel"]]},
+                        }
+                        for assignment in assignments
+                    ]
 
                 # send the data
                 with InfluxDBClient(url=url, token=token, org=org) as client:
