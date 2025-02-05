@@ -22,8 +22,44 @@ SN = "AC161/246"
 # Measurement period
 period = 15  # in second
 
-# Temp measurement locations and assigned TC08 logger channels
+# TC08 logger channels to activate & names assigned in InfluxDB
 assignments = [
+    {
+        "num": 1,
+        "name": "Ch1",
+    },
+    {
+        "num": 2,
+        "name": "Ch2",
+    },
+    {
+        "num": 3,
+        "name": "Ch3",
+    },
+    {
+        "num": 4,
+        "name": "Ch4",
+    },
+    {
+        "num": 5,
+        "name": "Ch5",
+    },
+    {
+        "num": 6,
+        "name": "Ch6",
+    },
+    {
+        "num": 7,
+        "name": "Ch7",
+    },
+    {
+        "num": 8,
+        "name": "Ch8",
+    },
+]
+
+# legacy channel assignments
+assignments_legacy = [
     {
         "Location": "Exp table bottom ambient",
         "Channel": 1,
@@ -69,7 +105,7 @@ org = "yelab"
 bucket = "sr3"  # If bucket not exists, create it from the database UI.
 
 channels = [
-    assignment["Channel"] for assignment in assignments
+    assignment["num"] for assignment in assignments
 ]  # TC08 logger's channels to activate
 
 # Names of log files
@@ -161,6 +197,28 @@ def main():
                             "measurement": "TC08logger",
                             "tags": {
                                 "Logger SN": SN,
+                                "Channel": "Cold Junction",
+                            },
+                            "fields": {"Temp[degC]": temp[0]},
+                        }
+                    ] + \
+                    [  # channel temperatures
+                        {
+                            "measurement": "TC08logger",
+                            "tags": {
+                                "Logger SN": SN,
+                                "Channel": assignment["name"],
+                            },
+                            "fields": {"Temp[degC]": temp[assignment["num"]]},
+                        }
+                        for assignment in assignments
+                    ] + \
+                    [  # legacy format
+                        # cold junction
+                        {
+                            "measurement": "TC08logger",
+                            "tags": {
+                                "Logger SN": SN,
                                 "Location": "Cold Junction",
                             },
                             "fields": {"Temp[degC]": temp[0]},
@@ -175,7 +233,7 @@ def main():
                             },
                             "fields": {"Temp[degC]": temp[assignment["Channel"]]},
                         }
-                        for assignment in assignments
+                        for assignment in assignments_legacy
                     ]
 
                 # send the data
