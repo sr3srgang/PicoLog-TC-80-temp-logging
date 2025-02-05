@@ -268,8 +268,11 @@ def main():
 
     finally:
         # close unit
-        status["close_unit"] = tc08.usb_tc08_close_unit(chandle)
-        assert_pico2000_ok(status["close_unit"])
+        try:
+            status["close_unit"] = tc08.usb_tc08_close_unit(chandle)
+            assert_pico2000_ok(status["close_unit"])
+        except:
+            pass
 
         # display status returns
         # print(status)
